@@ -3,25 +3,58 @@
 # Install required ProteoLab package dependencies from DESCRIPTION.
 # By default this installs non-base Imports only.
 # Use --with-suggests to also install Suggests entries.
+dependencies<-c(
+  "arrow",
+  "assertthat",
+  "ComplexHeatmap",
+  "ComplexUpset",
+  "circlize",
+  "clusterProfiler",
+  "cowplot",
+  "decoupleR",
+  "data.table",
+  "dplyr",
+  "furrr",
+  "factoextra",
+  "fgsea",
+  "GGally",
+  "ggplot2",
+  "ggpubr",
+  "ggsci",
+  "grid",
+  "here",
+  "imputeLCMD",
+  "janitor",
+  "limma",
+  "magrittr",
+  "methods",
+  "msigdbr",
+  "OmnipathR",
+  "plyr",
+  "purrr",
+  "patchwork",
+  "reshape2",
+  "Rtsne",
+  "S4Vectors",
+  "shiny",
+  "stats",
+  "stringr",
+  "SummarizedExperiment",
+  "sva",
+  "tibble",
+  "tidyr",
+  "umap",
+  "utils",
+  "vsn",
+  "EnhancedVolcano",
+  "lubridate",
+  "patchwork"
+)
 
-parse_description_field <- function(desc, field) {
-  if (!field %in% colnames(desc)) {
-    return(character(0))
-  }
-
-  raw <- gsub("\n", " ", desc[1, field])
-  pkgs <- trimws(unlist(strsplit(raw, ",", fixed = TRUE)))
-  pkgs <- gsub("\\s*\\(.*\\)$", "", pkgs)
-  pkgs[nzchar(pkgs)]
-}
-
-install_proteolab_dependencies <- function(with_suggests = FALSE) {
-  desc <- read.dcf("DESCRIPTION")
-  imports <- parse_description_field(desc, "Imports")
-  suggests <- parse_description_field(desc, "Suggests")
+install_dependencies <- function(r_packages) {
 
   base_r_packages <- c("grid", "methods", "stats", "utils")
-  required_pkgs <- setdiff(imports, base_r_packages)
+  required_pkgs <- setdiff(r_packages, base_r_packages)
 
   target_pkgs <- required_pkgs
   if (isTRUE(with_suggests)) {
@@ -71,5 +104,5 @@ install_proteolab_dependencies <- function(with_suggests = FALSE) {
 if (sys.nframe() == 0L) {
   args <- commandArgs(trailingOnly = TRUE)
   with_suggests <- "--with-suggests" %in% args
-  install_proteolab_dependencies(with_suggests = with_suggests)
+  install_dependencies(r_packages = dependencies)
 }
