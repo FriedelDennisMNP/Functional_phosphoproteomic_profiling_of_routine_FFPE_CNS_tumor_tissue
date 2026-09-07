@@ -46,8 +46,7 @@ dependencies:
   - r-circlize=0.4.17
 
 # ---- Bioconductor packages ----#
-  - bioconductor-summarizedexperiment=1.40.0
-  - bioconductor-cmapr=1.22.0
+  - bioconductor-summarizedexperiment
   - bioconductor-decoupler=2.16.0
   - bioconductor-omnipathr=3.18.4
   - bioconductor-complexheatmap=2.26.1
