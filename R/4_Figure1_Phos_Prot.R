@@ -16,6 +16,7 @@ library("SummarizedExperiment")
 library("dplyr")
 library("patchwork")
 library("ggplot2")
+
 calc_cv_fraction<-function(x,na.rm=T){
   sd(x,na.rm=T)/mean(x,na.rm=T)
 }
