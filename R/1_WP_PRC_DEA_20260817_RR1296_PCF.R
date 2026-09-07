@@ -13,7 +13,8 @@ library("SummarizedExperiment")
 source("./R/utils/rip_functions.R")
 source("./R/utils/utils_module.R")
 source("./R/utils/import_module.R")
-source("./R/utils/run_pathview_in.R")
+source("./R/utils/preprocess_module.R")
+source("./R/utils/compare_module.R")
 
 create_rip_envir(rip_dir = "./")
 
@@ -25,8 +26,8 @@ diann_result_path<-"/mnt/add50/PATHO-PROTEOMICS/bioinformatics/results/DIA/20260
 # For running DIANN analyis with create_diann_se_list 
 # you will need the parquet file and the stats file  
 
-#diann_result_path<-"/mnt/add50/PATHO-PROTEOMICS/bioinformatics/results/DIA/20260817_RR1296_PCF/diann_2.3.1/Lib_free/"
-diann_result_path<-"/data/"
+diann_result_path<-"/mnt/add50/PATHO-PROTEOMICS/bioinformatics/results/DIA/20260817_RR1296_PCF/diann_2.3.1/Lib_free/"
+#diann_result_path<-"/data/"
 remove_low_quality <- TRUE
 only_proteotypic <- TRUE
 number_cores = 2
@@ -68,7 +69,7 @@ ms_se_flt<-ms_se[,ms_se$group%in%c("WT","Amp")]
 
 ### Run Preproc and DEA
 ### Preprocess
-ms_se_prc <- proteoLab::pre_processing_wrapper(
+ms_se_prc <- pre_processing_wrapper(
   se_object = ms_se_flt,
   group_sel = "group",
   filter_fractioned = T,
@@ -80,7 +81,7 @@ ms_se_prc <- proteoLab::pre_processing_wrapper(
 
 saveRDS(ms_se_prc, save_here(object_name = "ms_se_prc.rds"))
 
-qc_plots <- proteoLab::qp_plots_wrapper(se_proc_ls = ms_se_prc,
+qc_plots <- qp_plots_wrapper(se_proc_ls = ms_se_prc,
                                         thr_sample = 4000,
                                         group_sel = "group")
 qc_plots
@@ -103,7 +104,7 @@ purrr::map2(qc_plots, names(qc_plots), function(x, y) {
 ms_se_imp <- ms_se_prc$imp
 ms_se_imp$group <- toupper(ms_se_imp$group)
 
-dea_res <- proteoLab::wrapper_dea_gsea(
+dea_res <- wrapper_dea_gsea(
   ms_se = ms_se_imp,
   wrp_group = "group",
   wrp_test = "AMP",

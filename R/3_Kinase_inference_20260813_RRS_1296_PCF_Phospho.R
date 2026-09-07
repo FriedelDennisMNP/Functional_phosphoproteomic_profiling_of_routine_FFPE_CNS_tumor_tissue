@@ -1,13 +1,18 @@
 dataset  = '20260813_RRS_1296_PCF_Phospho' # - Name of the dataset that is going to be analysed.
 analysis = paste0('PTM_Decoupler_Kinase_Infernce/',Sys.Date()) # - Name of the analysis e.g Marker Identification
 
-library("rip")
-library("proteoLab")
 library("dplyr")
-library("patchwork")
 library("ggplot2")
+library("patchwork")
 library("ComplexHeatmap")
+library("SummarizedExperiment")
+source("./R/utils/rip_functions.R")
+source("./R/utils/utils_module.R")
+source("./R/utils/import_module.R")
+source("./R/utils/preprocess_module.R")
+source("./R/utils/compare_module.R")
 source("./R/utils/run_pathview_in.R")
+source("./R/utils/ptm_module.R")
 
 ###### Kinase Inference #####
 ptm_se_imp<-readRDS("./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_DEA/2026-08-19/ptm_se_imp.rds")
@@ -78,6 +83,7 @@ EGFR_kin_sub_heatmap<-ComplexHeatmap::Heatmap(
     legend_height = grid::unit(10, "cm"))
 )%>%complexheatmap_to_ggplot(.)
 EGFR_kin_sub_heatmap
+
 ggsave(plot = EGFR_kin_sub_heatmap,
        save_here(object_name = "EGFR_kin_sub_heatmap.pdf"),
        width = 10,
