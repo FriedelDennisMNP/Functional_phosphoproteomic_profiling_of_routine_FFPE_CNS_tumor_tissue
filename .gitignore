@@ -8,3 +8,6 @@
 /data/
 /output/
 /projects/
+
+/utils/copro.R
+/utils/run_pathview_in.R
