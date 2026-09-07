@@ -9,5 +9,11 @@
 /output/
 /projects/
 
+### Ignore Scripts which were not used in Paper
 /utils/copro.R
 /utils/run_pathview_in.R
+
+/R/analysis/20260512_RRS_1269_PCF_Phospho
+/R/analysis/deprecart
+/R/analysis/Diagnsosis_SampleP07P13.R
+/R/analysis/make_Networkin_dbrds.R
