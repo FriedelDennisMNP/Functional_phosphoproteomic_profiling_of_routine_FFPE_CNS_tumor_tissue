@@ -5,13 +5,14 @@
 ####===================================####
 dataset  = '20260817_RR1296_PCF' # - Name of the dataset that is going to be analysed.
 analysis = paste0('WP_PRC_DEA/',Sys.Date()) # - Name of the analysis e.g Marker Identification
-"WP_PRC_DEA_20260813_RRS_1296_PCF_Phospho.R"
-library("rip")
-library("proteoLab")
+
 library("dplyr")
 library("patchwork")
 library("ggplot2")
 library("SummarizedExperiment")
+source("./R/utils/rip_functions.R")
+source("./R/utils/utils_module.R")
+source("./R/utils/import_module.R")
 source("./R/utils/run_pathview_in.R")
 
 #### Import data #####
@@ -23,7 +24,6 @@ verbose = TRUE
 
 msdata <- load_ms_results(ms_result_dir = diann_result_path)
 msdata$result_stats_tsv$file_name<-gsub(".*/","",msdata$result_stats_tsv$file_name)%>%gsub("[.]raw","",.)
-msdata$result_stats_tsv$file_name
 
 msdata<-create_diann_se_list(
   result_tsv=msdata$result_parquet,
