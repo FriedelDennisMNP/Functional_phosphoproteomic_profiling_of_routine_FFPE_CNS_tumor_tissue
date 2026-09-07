@@ -1,0 +1,239 @@
+####=============== Rscript: unsupervised_analysis===============####
+# Author:Dennis Friedel
+# Date: 2024-06-03
+# Modification: 2024-06-04
+# Description: Unsupervised analysis of beta values of the sample cohort.
+# Major aim quality control prior protoemic analyis, idenitifcation of membership of samples and segregation 
+# into right cns methylation classes. 
+# Detail:
+#'
+####===================================####
+analysis = paste0('/',Sys.Date()) # - Name of the analysis e.g Marker Identification
+dataset = paste0('/Figure3_PhosProt/')
+library("rip")
+library("proteoLab")
+library("SummarizedExperiment")
+library("dplyr")
+library("patchwork")
+library("ggplot2")
+calc_cv_fraction<-function(x,na.rm=T){
+  sd(x,na.rm=T)/mean(x,na.rm=T)
+}
+
+### Set colors ###
+layers <- c(
+  'EGFR-amplified' = "#F77576",
+  'Non-amplified' = "#91BFD1"
+)
+
+wp<-readRDS("./output/20260817_RR1296_PCF/WP_PRC_DEA/2026-08-20/ms_se_prc.rds")
+
+datasets<-list("WP"=wp$imp)
+#### Figure 3A PCA #####
+Figure3A<-purrr::map(datasets,function(ms_imp){
+  ms_imp$group<-ifelse(ms_imp$group=="WT",'Non-amplified','EGFR-amplified')
+  ms_imp$Group<-factor(ms_imp$group,levels = c('Non-amplified','EGFR-amplified'))
+  
+  
+  ms_pca<-runPCA_se(ms_imp,scale = T,center=T)
+  
+  egfstat_annova <-pca_anova(
+    variable = "group",
+    mat = t(SummarizedExperiment::assay(ms_pca)),
+    data_df = as.data.frame(SummarizedExperiment::colData(ms_pca)))
+  subtit<-paste0("PC1 ",round(egfstat_annova$PoV_sum,3)*100,"% contribution to dataset variability ")
+  
+  pca_x <- as.data.frame(get_reduction_se(ms_pca, "PCA")$x)
+  pca_x$EGFR<-ms_pca$Group
+  Figure3a <-
+    ggplot2::ggplot(pca_x, ggplot2::aes(x = PC1, y = PC2, color = EGFR)) +
+    ggplot2::geom_point(size = 5) +
+    ggplot2::xlab(label = paste0(colnames(pca_x)[1])) +
+    ggplot2::ylab(label = paste0(colnames(pca_x)[2])) +
+    scale_color_manual(name="EGFR status",values = layers)+
+    ggplot2::stat_ellipse(type = "norm", linetype = 1)+
+    ggtitle(label = "Distribution of samples in PC1 and PC2 ")+
+    theme_minimal()+
+    theme(
+      panel.grid.major = element_blank(),
+      strip.background = element_rect(fill = "grey90", color = NA),
+      strip.text =  element_text(face = "bold"),
+      axis.text =  element_text(angle = 45, hjust = 1),
+      axis.title =  element_text(size=14)
+    )+
+    geom_text(
+      data = aggregate(PC1 ~ EGFR,pca_x,median),
+      aes(x=PC1+0.5,y=PC1-5,label = EGFR),
+      hjust=0,fontface="bold"
+    )
+})
+ggsave(plot = Figure3A[[1]],save_here(object_name = "Figure3A.pdf"),width = 6,height = 6)
+
+#### Figure 3B Volcano #####
+wp_se_prc<-wp
+
+### Differential Expression
+wp_se_imp<-wp_se_prc$imp
+
+wp_se_imp$group<-toupper(wp_se_imp$group)
+dea_res <- proteoLab::wrapper_dea_gsea(
+  ms_se = wp_se_imp,
+  wrp_group = "group",
+  wrp_test = "AMP",
+  wrp_contrast = list(c("WT")),
+  wrp_mode = "MANUAL",
+  wrp_pv_fil = 0.05,
+  wrp_fc_fil = 0.58,
+  wrp_use_padj = F,
+  wrp_fgsea = T,
+  wrp_minSize = 5,wrp_maxSize = 300,
+  gene_set_catalouge = biological_list
+)
+limma_res<-dea_res$tt_combined
+
+#### Plot Custom enhanced Voclano
+alpha = 0.05
+lfc = .58
+use_padj = F
+pointsize=5
+labsize=5
+dot_colors=
+  c(
+    "#D3D3D3",# not significant
+    "#A1C9F4",# FC only
+    "#BFE3A1",# p-value only 
+    "#FFB3BA")# both significant
+
+
+# Convert to toptable to format for enhanced volcano
+limma_res_input<-limma_res
+list_limma_results<-convert_toptable_to_envo_input(limma_res = limma_res_input,
+                                                   tests_end_with="logFC",
+                                                   colname_adjP = "adj_P_Val",
+                                                   colname_LogFC = "logFC",
+                                                   colname_pvalue = "P_Value")
+tmp_toptable<-list_limma_results[[1]]
+tmp_toptable$site<-rownames(tmp_toptable)
+openxlsx::write.xlsx(tmp_toptable,save_here(object_name = "Supplemental_table6_WP_DEA.xlsx"))
+
+A<-gsub("vs_.*"," ",tmp_toptable$group)%>%gsub("_"," ",.)%>%unique()
+B<-gsub(".*vs_"," ",tmp_toptable$group)%>%gsub("_"," ",.)%>%unique()
+tmp_toptable$significant <-
+  tmp_toptable$`p-value` < alpha &
+  abs(tmp_toptable$log2FoldChange) > lfc
+use_this_pvalue <- "p-value"
+y_axis_label <- bquote( ~ -Log[10] ~ italic(P))
+
+top_candidates<-rownames(tmp_toptable)[tmp_toptable$significant]
+topptms<-openxlsx::read.xlsx("./output/Figure2_PhosProt/2026-08-20/Supplemental_table2.xlsx")
+topptms<- gsub("_.*","",topptms$site[topptms$significant])%>%unique()
+
+genes_of_interest<-paste(top_candidates[top_candidates%in%topptms],collapse = "|")
+show_top_candidates<-top_candidates
+genes_to_highlight<-show_top_candidates[grep(genes_of_interest,show_top_candidates)]
+
+## Plot Enhanced Volcano
+enVo <-
+  EnhancedVolcano::EnhancedVolcano(
+    toptable = tmp_toptable,
+    title = "Comparison of GBM with EGFR Status Amplified vs. Non-Amplified",
+    subtitle = paste0(
+      "Number significant phosphosites: ",
+      sum(tmp_toptable$significant, na.rm = T)
+    ),
+    lab = rownames(tmp_toptable),
+    selectLab = show_top_candidates,
+    x = 'log2FoldChange',
+    y = use_this_pvalue,
+    col = dot_colors,
+    ylim = c(0, max(tmp_toptable$'log2FoldChange') + 0.5),
+    pCutoff = alpha,
+    FCcutoff = lfc,
+    pointSize = 4,
+    colAlpha = 0.7,
+    legendPosition = "top",
+    legendLabSize = 12,
+    legendIconSize = 5.0,
+    boxedLabels = T,
+    drawConnectors = T,
+    widthConnectors = 0.75,lengthConnectors = 1,
+    colConnectors = "grey10",
+    max.overlaps = 15,
+    arrowheads = FALSE,
+    endsConnectors = "first",
+    typeConnectors = "closed",
+    maxoverlapsConnectors = 10,
+    min.segment.length = 20,labSize = 3
+  ) +
+  ggplot2::annotate(
+    "text",
+    x = max(tmp_toptable$'log2FoldChange'),
+    y = 0,
+    label = "Amplified",
+    size = ggplot2::unit(6, "pt"),
+    parse = F
+  ) +
+  ggplot2::annotate(
+    "text",
+    x = min(tmp_toptable$'log2FoldChange'),
+    y = 0,
+    label = "Non-Amplified",
+    size = ggplot2::unit(6, "pt"),
+    parse = F
+  ) +
+  ggplot2::ylab(y_axis_label)
+enVo
+
+ggsave(
+  plot = enVo,
+  save_here(object_name = "Figrue3B_WPVolcano.pdf"),
+  width = 10,
+  height = 10
+)
+
+#### Figure 3C Genesetenrichment #####
+reactome_result<-dea_res$fgsea_result$H.@data
+Figure3C <- ggplot2::ggplot(reactome_result, ggplot2::aes(x = reorder(pathway, NES), y = NES, fill = logAPV)) +
+  ggplot2::geom_col(alpha = 0.9) +
+  ggplot2::coord_flip() +
+  ggplot2::scale_fill_gradient(name = expression(-log[10]~adj.~P),
+                               low = "grey80", high = "#3E6650") +
+  ggplot2::theme_minimal() +
+  ggplot2::labs(x = "Pathway", y = "Normalized Enrichment Score")+
+  theme(text = ggplot2::element_text(size = 12),
+        plot.title = ggplot2::element_text(face = "bold", hjust = 0.5,color="darkblue"),
+        strip.background = ggplot2::element_rect(fill = "grey90", color = NA),
+        strip.text =  ggplot2::element_text(face = "bold"),
+        axis.text =  element_text(color = "grey25"),
+        axis.text.x= element_text(angle = 45, hjust = 1,size = 13)
+  )
+Figure3C
+ggsave(
+  plot = Figure3C,
+  save_here(object_name = "Figure3C_Hallmarks.pdf"),
+  width = 10,
+  height = 10
+)
+fig3_design  =  c(
+  patchwork::area(1, 1),
+  patchwork::area(2, 1),
+  patchwork::area(1, 2,2)
+)
+
+Figure3 <-
+  Figure3A$WP + 
+  enVo + 
+  Figure3C + 
+  plot_layout(design = fig3_design, ncol = 2)
+
+Figure3
+
+ggsave(
+  plot = Figure3,
+  save_here(object_name = "Figure3_wholeproteome.pdf"),
+  width = 12,
+  height = 10
+)
+  
+
+
