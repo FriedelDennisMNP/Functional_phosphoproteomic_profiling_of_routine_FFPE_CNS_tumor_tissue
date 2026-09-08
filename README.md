@@ -31,15 +31,27 @@ micromamba create -f Functional_phosphoproteomic_profiling_Friedel_et_al.yaml
 micromamba activate Functional_phosphoproteomic_profiling_Friedel_et_al
 
 ```
+# 2) Download data from the Proteomics Identification Database (PRIDE)
+https://www.ebi.ac.uk/pride/ using the accession IDs.
 
-# 2) Download data form PRoteomics Idenitification Database (PRIDE) 
-https://www.ebi.ac.uk/pride/ using the accession IDS 
+# 3) Execute the code provided in R/
 
-# 3) Exectue the code provided in R/analysis/figures
+## Overview of the R scripts
 
-## Questions ? 
+The scripts in `R/` are intended to be executed in numerical order. Scripts 1 and 2 prepare the whole-proteome and phosphoproteome data, respectively. Scripts 3 to 5 use these processed results to generate the figures and perform kinase-activity inference. Script 6 generates single-sample reports from the phosphoproteomic data.
 
-For questions or issues use theb issue section in this repository, I will try to
+- `1_WP_PRC_DEA_20260817_RR1296_PCF.R`: Imports the DIA-NN whole-proteome results, annotates the samples, performs quality control and preprocessing, and runs differential abundance analysis between EGFR-amplified and non-amplified tumors.
+- `2_PTM_PRC_DEA_20260813_RRS_1296_PCF_Phospho.R`: Imports the MaxQuant phosphoproteomic results, filters and annotates phosphosites, performs quality control and preprocessing, and runs differential phosphoproteomic analysis between EGFR-amplified and non-amplified tumors.
+- `3_Figure1_Phos_Prot.R`: Loads the processed whole-proteome and phosphoproteome results and creates the protein/phosphosite identification and data-quality panels for Figure 1 and Supplemental Figure 1.
+- `4_Figure_2Prot_3Phos.R`: Creates PCA plots, differential-abundance volcano plots, and pathway-enrichment visualizations for the whole-proteome and phosphoproteome results, including Figures 2 and 3.
+- `5_Figure3c_Kinase_inference_20260813_RRS_1296_PCF_Phospho.R`: Performs kinase-substrate enrichment and kinase-activity inference using OmniPath enzyme-substrate resources, then generates kinase-activity plots and Supplemental Table 3.
+- `6_SingleSampleReport_v2_MBR.R`: Generates a single-sample report for each phosphoproteomic sample, including sample metadata, quality-control metrics, kinase activity, and pathway-activity summaries.
+
+## Questions
+
+The provided environment uses R version 4.5.2. The workflow uses the following R packages: `arrow`, `assertthat`, `cmapR`, `clusterProfiler`, `ComplexHeatmap`, `circlize`, `data.table`, `dplyr`, `enrichplot`, `EnhancedVolcano`, `fgsea`, `ggplot2`, `ggpubr`, `ggsci`, `here`, `imputeLCMD`, `janitor`, `magrittr`, `msigdbr`, `OmnipathR`, `openxlsx`, `patchwork`, `plyr`, `proteoLab`, `purrr`, `reshape2`, `rip`, `R.utils`, `stringr`, and `SummarizedExperiment`, together with the standard R packages `grid`, `methods`, `parallel`, and `stats`.
+
+For questions or issues, use the issue section in this repository. I will try to
 respond as soon as possible.
 
 
