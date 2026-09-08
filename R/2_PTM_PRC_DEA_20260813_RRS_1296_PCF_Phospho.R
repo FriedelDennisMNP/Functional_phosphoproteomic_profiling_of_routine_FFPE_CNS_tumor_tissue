@@ -1,17 +1,15 @@
-####=============== Rscript: unsupervised_analysis===============####
-# Author:Dennis Friedel
-# Date: 2024-06-03
-# Modification: 2024-06-04
-# Description: Unsupervised analysis of beta values of the sample cohort.
-# Major aim quality control prior protoemic analyis, idenitifcation of membership of samples and segregation 
-# into right cns methylation classes. 
-# Detail:
-#'
 ####===================================####
+# Author: Dennis Friedel, PhD
+# Date: 2026-09-07
+# Bioinformatician,
+# Department of Neuropahtology, University Clinic Heidelberg
+####===================================####
+
 dataset  = '20260813_RRS_1296_PCF_Phospho' # - Name of the dataset that is going to be analysed.
 analysis = paste0('PTM_PRC_DEA/',Sys.Date()) # - Name of the analysis e.g Marker Identification
 "PTM_PRC_DEA_20260813_RRS_1296_PCF_Phospho.R"
 
+set.seed(2905)
 library("dplyr")
 library("patchwork")
 library("ggplot2")
@@ -24,7 +22,7 @@ source("./R/utils/compare_module.R")
 
 ### Load data
 mq_results<-
-  load_ms_results(ms_result_dir = "/mnt/add50/PATHO-PROTEOMICS/bioinformatics/results/DDA/20260813_RRS_1296_PCF_Phospho/MaxQuant2.4.2.0/",
+  load_ms_results(ms_result_dir = "./data//20260813_RRS_1296_PCF_Phospho/MaxQuant2.4.2.0",
                              file_names = c("summary.txt",
                              "peptides.txt",
                              "evidence.txt",
@@ -52,7 +50,6 @@ SummarizedExperiment::colData(ptm_se)<-S4Vectors::DataFrame(metadata[match(ptm_s
 ptm_se_flt<-ptm_se[,ptm_se$group%in%c("Amp","WT")]
 saveRDS(ptm_se_flt,save_here(object_name = "ptm_se_raw.rds"))
 
-
 ### Preprocess
 ptm_se_prc <- pre_processing_wrapper(
   se_object = ptm_se_flt,
@@ -70,6 +67,7 @@ qc_plots <- qp_plots_wrapper(se_proc_ls = ptm_se_prc,
                                         thr_sample = 4000,
                                         group_sel = "group")
 qc_plots
+gc()
 
 purrr::map2(qc_plots, names(qc_plots), function(x, y) {
   ggplot2::ggsave(
@@ -102,6 +100,7 @@ dea_res <- wrapper_dea_gsea(
 )
 
 ttresult <- dea_res$tt_combined
+sum(ttresult$significant)
 ttresult[ttresult$AMP_vs_WT_adj_P_Val < 0.05, ]
 
 dea_res$tt_combined <- NULL

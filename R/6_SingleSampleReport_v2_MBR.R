@@ -1,23 +1,25 @@
-####=============== Rscript: unsupervised_analysis===============####
-# Author:Dennis Friedel
-# Date: 2024-06-03
-# Modification: 2026-08-11
-# 
-# Create a potential diagnostic report for a sample analyzed by LC-MS 
-#
-####==============================================================####
-analysis = paste0('/',Sys.Date()) # - Name of the analysis e.g Marker Identification
-dataset = paste0('/SingleSampleReport_V2_MBR/')
+####===================================####
+# Author: Dennis Friedel, PhD
+# Date: 2026-09-07
+# Bioinformatician,
+# Department of Neuropahtology, University Clinic Heidelberg
+####===================================####
 
 ##### Load libraries #####
-library("rip")
-library("proteoLab")
-library("SummarizedExperiment")
 library("dplyr")
 library("patchwork")
 library("ggplot2")
 library("ggpubr")
 library("enrichplot")
+library("SummarizedExperiment")
+source("./R/utils/rip_functions.R")
+source("./R/utils/utils_module.R")
+source("./R/utils/import_module.R")
+source("./R/utils/preprocess_module.R")
+source("./R/utils/compare_module.R")
+
+analysis = paste0('/',Sys.Date()) # - Name of the analysis e.g Marker Identification
+dataset = paste0('/SingleSampleReport_V2_MBR/')
 
 ##### Load cohort #####
 ptm_se_raw<-readRDS(".//output/20260813_RRS_1296_PCF_Phospho//PTM_PRC_DEA/2026-08-19/ptm_se_raw.rds")

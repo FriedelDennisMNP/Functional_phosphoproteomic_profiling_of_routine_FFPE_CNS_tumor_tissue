@@ -1,4 +1,9 @@
 ##### Utils modules #####
+# Author: Dennis Friedel, PhD
+# Date: 2026-09-07
+# Bioinformatician,
+# Department of Neuropahtology, University Clinic Heidelberg
+####===================================####
 
 # Required libraries
 #library("SummarizedExperiment")

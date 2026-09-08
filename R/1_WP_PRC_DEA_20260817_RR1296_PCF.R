@@ -1,11 +1,11 @@
-####=============== Rscript: unsupervised_analysis===============####
-# Author:Dennis Friedel
-# Date: 2026-08-20
-
 ####===================================####
-dataset  = '20260817_RR1296_PCF' # - Name of the dataset that is going to be analysed.
-analysis = paste0('WP_PRC_DEA/',Sys.Date()) # - Name of the analysis e.g Marker Identification
+# Author: Dennis Friedel, PhD
+# Date: 2026-09-07
+# Bioinformatician,
+# Department of Neuropahtology, University Clinic Heidelberg
+####===================================####
 
+set.seed(2905)
 library("dplyr")
 library("patchwork")
 library("ggplot2")
@@ -16,18 +16,17 @@ source("./R/utils/import_module.R")
 source("./R/utils/preprocess_module.R")
 source("./R/utils/compare_module.R")
 
+dataset  = '20260817_RR1296_PCF' # - Name of the dataset that is going to be analysed.
+analysis = paste0('WP_PRC_DEA/',Sys.Date()) # - Name of the analysis e.g Marker Identification
 create_rip_envir(rip_dir = "./")
 
 #### Import data #####
-diann_result_path<-"/mnt/add50/PATHO-PROTEOMICS/bioinformatics/results/DIA/20260817_RR1296_PCF/diann_2.3.1/Lib_free/"
-
 #### Note #####
 # In order to run this code you need to download the Data Stored in PRIDE 
 # For running DIANN analyis with create_diann_se_list 
 # you will need the parquet file and the stats file  
 
-diann_result_path<-"/mnt/add50/PATHO-PROTEOMICS/bioinformatics/results/DIA/20260817_RR1296_PCF/diann_2.3.1/Lib_free/"
-#diann_result_path<-"/data/"
+diann_result_path<-"./data/20260821_RR1296_PCF/diann_2.3.1/Lib_free/"
 remove_low_quality <- TRUE
 only_proteotypic <- TRUE
 number_cores = 2
@@ -117,9 +116,8 @@ dea_res <- wrapper_dea_gsea(
 )
 
 ttresult <- dea_res$tt_combined
-ttresult[ttresult$AMP_vs_WT_adj_P_Val < 0.05, ]
-
 dea_res$tt_combined <- NULL
+
 purrr::map2(dea_res, names(dea_res), function(x, y) {
   ggplot2::ggsave(
     filename = save_here(
