@@ -52,7 +52,7 @@ msdata<-create_diann_se_list(
 saveRDS(msdata,save_here(object_name="diann_list.rds"))
 
 ### Annoate with Supplemental Table 1 
-metadata<-openxlsx::read.xlsx("./Sample_annotation.xlsx",sheet = 1)
+metadata<-openxlsx::read.xlsx("./data/Sample_annotation.xlsx",sheet = 1)
 metadata$original_id<-gsub("_p_raw","",metadata$original_id)
 rownames(metadata)<-metadata$sample_id
 

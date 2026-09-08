@@ -36,7 +36,7 @@ mq_list <- create_maxquant_se_list(
 )
 
 ### Annoate
-metadata<-openxlsx::read.xlsx("./Sample_annotation.xlsx",sheet = 1)
+metadata<-openxlsx::read.xlsx("./data/Sample_annotation.xlsx",sheet = 1)
 rownames(metadata)<-metadata$sample_id
 
 ptm_se<-mq_list$ptm_se
