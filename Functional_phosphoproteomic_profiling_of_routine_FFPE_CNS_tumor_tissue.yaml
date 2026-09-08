@@ -47,7 +47,7 @@ dependencies:
   - bioconductor-enhancedvolcano
   - bioconductor-enrichplot
   - bioconductor-fgsea
-  - bioconductor-imputelcmd
+  - r-imputelcmd
   - bioconductor-limma
   - bioconductor-omnipathr
   - bioconductor-pathview
