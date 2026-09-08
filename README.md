@@ -27,8 +27,8 @@ Phosphoproteomics therefore represents an orthogonal functional layer that may c
 # 1) Create an environment with Micromamba using the provided .yaml file:
 
 ```bash
-micromamba create -f Functional_phosphoproteomic_profiling_Friedel_et_al.yaml
-micromamba activate Functional_phosphoproteomic_profiling_Friedel_et_al
+micromamba create -f Functional_phosphoproteomic_profiling_of_routine_FFPE_CNS_tumor_tissue.yaml
+micromamba activate Functional_phosphoproteomic_profiling_of_routine_FFPE_CNS_tumor_tissue
 
 ```
 
