@@ -24,7 +24,7 @@ Phosphoproteomics therefore represents an orthogonal functional layer that may c
 
 ## How to reproduce the results from the paper using the information from this repository 
 
-# 1) Create an environment with Micromamba using the provided yaml file:
+# 1) Create an environment with Micromamba using the provided .yaml file:
 
 ```bash
 micromamba create -f Functional_phosphoproteomic_profiling_Friedel_et_al.yaml
@@ -32,14 +32,14 @@ micromamba activate Functional_phosphoproteomic_profiling_Friedel_et_al
 
 ```
 
-# 2) Download data form PRoteomics Idenitification Database (PRIDE) 
+# 2) Download data form PRoteomics Identification Database (PRIDE) 
 https://www.ebi.ac.uk/pride/ using the accession IDS 
 
 # 3) Exectue the code provided in R/analysis/figures
 
 ## Questions ? 
 
-For questions or issues use theb issue section in this repository, I will try to
+For questions or issues use the issue section in this repository, I will try to
 respond as soon as possible.
 
 
