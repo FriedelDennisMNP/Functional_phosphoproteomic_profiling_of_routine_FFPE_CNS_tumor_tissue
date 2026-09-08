@@ -26,7 +26,7 @@ create_rip_envir(rip_dir = "./")
 # For running DIANN analyis with create_diann_se_list 
 # you will need the parquet file and the stats file  
 
-diann_result_path<-"./data/20260821_RR1296_PCF/diann_2.3.1/Lib_free/"
+diann_result_path<-"./data/20260817_RR1296_PCF/diann_2.3.1/Lib_free/"
 remove_low_quality <- TRUE
 only_proteotypic <- TRUE
 number_cores = 2
@@ -48,10 +48,11 @@ msdata<-create_diann_se_list(
   gg_quantity=c("genes_max_lfq"),#"genes_normalised"
   verbose=TRUE
 )
+
 saveRDS(msdata,save_here(object_name="diann_list.rds"))
 
 ### Annoate with Supplemental Table 1 
-metadata<-openxlsx::read.xlsx("./Supplemental_table1.xlsx",sheet = 1)
+metadata<-openxlsx::read.xlsx("./Sample_annotation.xlsx",sheet = 1)
 metadata$original_id<-gsub("_p_raw","",metadata$original_id)
 rownames(metadata)<-metadata$sample_id
 
@@ -74,7 +75,7 @@ ms_se_prc <- pre_processing_wrapper(
   filter_fractioned = T,
   thr_sample = 5000,
   thr_feature = 0.75,
-  normalization_method = "median_center",
+  normalization_method = "none",
   imputation_method  = "MinProb"
 )
 

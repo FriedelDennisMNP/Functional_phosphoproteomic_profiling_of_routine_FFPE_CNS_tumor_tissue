@@ -18,7 +18,7 @@ source("./R/utils/preprocess_module.R")
 source("./R/utils/compare_module.R")
 
 # Set variables for save_here
-analysis = paste0('/') # - Name of the analysis e.g Marker Identification
+analysis = paste0('/')
 
 ### Set colors 
 layers <- c(
@@ -28,9 +28,9 @@ layers <- c(
 
 ######------- 1. Load Data -----------####
 ptm<-
-  readRDS("./output/20260813_RRS_1296_PCF_Phospho//PTM_PRC_DEA/2026-09-07///ptm_se_prc.rds")
+  readRDS("./output/20260813_RRS_1296_PCF_Phospho//PTM_PRC_DEA/2026-09-08///ptm_se_prc.rds")
 wp<-
-  readRDS("./output/20260817_RR1296_PCF/WP_PRC_DEA/2026-09-07/ms_se_prc.rds")
+  readRDS("./output/20260817_RR1296_PCF/WP_PRC_DEA/2026-09-08/ms_se_prc.rds")
 
 datasets<-list("PTM"=ptm$imp,
                "WP"=wp$imp)
@@ -91,14 +91,18 @@ ggsave(
   height = 6
 )
 
-######------- 3. Figure 2 B Volcano  -----------####
+######------- 3. Figure 2 B Protein Volcano  -----------####
 wp_se_imp<-wp$imp
 wp_se_imp$group<-toupper(wp_se_imp$group)
 
-biological_list<-proteoLab::biological_list
-Hallmarks<-biological_list$H.
+### Get Hallmarks from MSIGDB
+msigdbr_coll<-msigdbr::msigdbr_collections()%>%as.data.frame()
+categories<-paste0(msigdbr_coll$gs_collection,".",msigdbr_coll$gs_subcollection)
+misg_df<-msigdbr::msigdbr(species = "Homo sapiens",collection = "H")  
+misg_df <- split(x = misg_df$gene_symbol, f = misg_df$gs_name)
+hallmarks<-misg_df
 
-dea_res <- proteoLab::wrapper_dea_gsea(
+dea_res <- wrapper_dea_gsea(
   ms_se = wp_se_imp,
   wrp_group = "group",
   wrp_test = "AMP",
@@ -109,16 +113,16 @@ dea_res <- proteoLab::wrapper_dea_gsea(
   wrp_use_padj = F,
   wrp_fgsea = T,
   wrp_minSize = 5,wrp_maxSize = 300,
-  gene_set_catalouge = list("Hallmarks"=Hallmarks)
+  gene_set_catalouge = list("Hallmarks"=hallmarks)
 )
-limma_res<-dea_res$tt_combined
 
-#### Plot Custom enhanced Voclano
+#### Set parameters for enhanced Voclano
 alpha = 0.05
 lfc = .58
 use_padj = F
 pointsize=5
 labsize=5
+use_this_pvalue <- "p-value"
 dot_colors=
   c(
     "#D3D3D3",# not significant
@@ -128,34 +132,21 @@ dot_colors=
 
 
 # Convert to toptable to format for enhanced volcano
-limma_res_input<-limma_res
-list_limma_results<-convert_toptable_to_envo_input(limma_res = limma_res_input,
+tmp_toptable<-convert_toptable_to_envo_input(limma_res = dea_res$tt_combined,
                                                    tests_end_with="logFC",
                                                    colname_adjP = "adj_P_Val",
                                                    colname_LogFC = "logFC",
-                                                   colname_pvalue = "P_Value")
-tmp_toptable<-list_limma_results[[1]]
-tmp_toptable$site<-rownames(tmp_toptable)
-openxlsx::write.xlsx(tmp_toptable,
-                     save_here(dataset="Supplemental_table",
-                       object_name = "Supplemental_table_WP_DEA.xlsx"))
-
+                                                   colname_pvalue = "P_Value")[[1]]
 A<-gsub("vs_.*"," ",tmp_toptable$group)%>%gsub("_"," ",.)%>%unique()
 B<-gsub(".*vs_"," ",tmp_toptable$group)%>%gsub("_"," ",.)%>%unique()
+
 tmp_toptable$significant <-
   tmp_toptable$`p-value` < alpha &
   abs(tmp_toptable$log2FoldChange) > lfc
-use_this_pvalue <- "p-value"
 y_axis_label <- bquote( ~ -Log[10] ~ italic(P))
 
 top_candidates<-rownames(tmp_toptable)[tmp_toptable$significant]
-
-topptms<-openxlsx::read.xlsx("./output/Supplemental_table/Supplemental_table2.xlsx")
-topptms<- gsub("_.*","",topptms$site[topptms$significant])%>%unique()
-
-genes_of_interest<-paste(top_candidates[top_candidates%in%topptms],collapse = "|")
-show_top_candidates<-top_candidates
-genes_to_highlight<-show_top_candidates[grep(genes_of_interest,show_top_candidates)]
+length(top_candidates)
 
 ## Plot Enhanced Volcano
 enVo <-
@@ -163,11 +154,10 @@ enVo <-
     toptable = tmp_toptable,
     title = "Comparison of GBM with EGFR Status Amplified vs. Non-Amplified",
     subtitle = paste0(
-      "Number significant phosphosites: ",
+      "Number significant proteins: ",
       sum(tmp_toptable$significant, na.rm = T)
     ),
     lab = rownames(tmp_toptable),
-    selectLab = show_top_candidates,
     x = 'log2FoldChange',
     y = use_this_pvalue,
     col = dot_colors,
@@ -217,8 +207,8 @@ ggsave(
   height = 10
 )
 
-######------- 4. Figure 3 C Enrichment  -----------####
-reactome_result<-dea_res$fgsea_result$Hallmarks$data
+######------- 4. Figure 3 C Protein Enrichment  -----------####
+reactome_result<-dea_res$fgsea_result$Hallmarks@data
 Figure3C <- ggplot2::ggplot(reactome_result, ggplot2::aes(x = reorder(pathway, NES), y = NES, fill = logAPV)) +
   ggplot2::geom_col(alpha = 0.9) +
   ggplot2::coord_flip() +
@@ -237,16 +227,15 @@ Figure3C
 ggsave(
   plot = Figure3C,
   save_here(dataset_name = "Figures",
-              object_name = "Figure3C_Hallmarks.pdf"),
+            object_name = "Figure3C_Hallmarks.pdf"),
   width = 10,
   height = 10
 )
 
-######------- 5. Figure 3 B Volcano  -----------####
-
-ptm_se_imp<-ptm_se_prc$imp
+######------- 5. Figure 3 B PTM Volcano  -----------####
+ptm_se_imp<-ptm$imp
 ptm_se_imp$group<-toupper(ptm_se_imp$group)
-dea_res <- proteoLab::wrapper_dea_gsea(
+dea_res <- wrapper_dea_gsea(
   ms_se = ptm_se_imp,
   wrp_group = "group",
   wrp_test = "AMP",
@@ -283,7 +272,7 @@ list_limma_results<-convert_toptable_to_envo_input(limma_res = limma_res_input,
 tmp_toptable<-list_limma_results[[1]]
 tmp_toptable$site<-rownames(tmp_toptable)
 openxlsx::write.xlsx(tmp_toptable,save_here(dataset_name = "Supplemental_table",
-  object_name = "Supplemental_table2.xlsx"))
+                                            object_name = "Supplemental_table2.xlsx"))
 
 A<-gsub("vs_.*"," ",tmp_toptable$group)%>%gsub("_"," ",.)%>%unique()
 B<-gsub(".*vs_"," ",tmp_toptable$group)%>%gsub("_"," ",.)%>%unique()
@@ -368,6 +357,3 @@ ggsave(
   width = 10,
   height = 10
 )
-
-
-

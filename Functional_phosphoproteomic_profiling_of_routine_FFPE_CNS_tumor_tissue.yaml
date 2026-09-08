@@ -3,10 +3,64 @@ name: Functional_phosphoproteomic_profiling_Friedel_et_al
 channels:
   - conda-forge
   - bioconda
-  
+
 dependencies:
-  
-  # ---- Core R ----
+  # Core
   - r-base=4.5.2
+  - r-essentials
+
+  # CRAN packages used across scripts and utils
+  - r-arrow
+  - r-assertthat
+  - r-cowplot
+  - r-data.table
+  - r-dplyr
+  - r-factoextra
+  - r-furrr
+  - r-ggally
+  - r-ggplot2
+  - r-ggpubr
+  - r-ggsci
+  - r-here
+  - r-janitor
+  - r-lubridate
+  - r-magrittr
+  - r-matrixstats
+  - r-msigdbr
+  - r-openxlsx
+  - r-patchwork
+  - r-plyr
+  - r-purrr
+  - r-r.utils
+  - r-reshape2
+  - r-rtsne
+  - r-shiny
+  - r-stringr
+  - r-tibble
+  - r-tidyr
+  - r-umap
+
+  # Bioconductor ecosystem packages
+  - bioconductor-clusterprofiler
+  - bioconductor-complexheatmap
+  - bioconductor-decoupler
+  - bioconductor-enhancedvolcano
+  - bioconductor-enrichplot
+  - bioconductor-fgsea
+  - r-imputelcmd
+  - bioconductor-limma
+  - bioconductor-omnipathr
+  - bioconductor-pathview
+  - bioconductor-s4vectors
+  - bioconductor-summarizedexperiment
+  - bioconductor-sva
+  - bioconductor-vsn
+
+  # Color mapping used with heatmaps
+  - r-circlize
+
+  # Convenience installer for optional custom packages from GitHub
+  - r-remotes
+
   
      

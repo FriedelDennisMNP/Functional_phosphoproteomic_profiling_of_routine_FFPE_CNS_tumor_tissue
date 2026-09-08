@@ -6,6 +6,7 @@
 ####===================================####
 
 ##### Load libraries #####
+set.seed(2905)
 library("dplyr")
 library("patchwork")
 library("ggplot2")
@@ -17,12 +18,13 @@ source("./R/utils/utils_module.R")
 source("./R/utils/import_module.R")
 source("./R/utils/preprocess_module.R")
 source("./R/utils/compare_module.R")
+source("./R/utils/ptm_module.R")
 
 analysis = paste0('/',Sys.Date()) # - Name of the analysis e.g Marker Identification
-dataset = paste0('/SingleSampleReport_V2_MBR/')
+dataset = paste0('/Figure/')
 
 ##### Load cohort #####
-ptm_se_raw<-readRDS(".//output/20260813_RRS_1296_PCF_Phospho//PTM_PRC_DEA/2026-08-19/ptm_se_raw.rds")
+ptm_se_raw<-readRDS(".//output/20260813_RRS_1296_PCF_Phospho//PTM_PRC_DEA/2026-09-08/ptm_se_raw.rds")
 phospho_samples<-colnames(ptm_se_raw)
 ptm_se_raw$EGFR<-gsub("Amp","EGFR amplification",ptm_se_raw$EGFR)%>%gsub("WT","EGFR unamplified",.)
 
@@ -34,9 +36,7 @@ reactome<-msigdbr::msigdbr(species="Homo sapiens",category="C2",subcategory = "C
   dplyr::select(gs_name,gene_symbol)
 
 ###### Load Therapeutic Pathways defined by Philip and selected fro Reactome by Claude
-#openxlsx::write.xlsx(as.data.frame(unique(reactome$gs_name)),"reactome_dbs.xlsx")
 therapeutic_pathways<-openxlsx::read.xlsx("./data/reactome_dbs_filtered.xlsx")
-
 relevant_kin<-openxlsx::read.xlsx("./data/cancer_kinases_by_category.xlsx")
 
 relevant_kin$Kinase<-gsub(" .*","",relevant_kin$Kinase)
@@ -59,12 +59,6 @@ enzsub_dbs<-purrr::map(resources,function(x){
 names(enzsub_dbs)<-resources
 enzsub_dbs<-plyr::compact(enzsub_dbs)
 enzsub_dbs_protmapper<-enzsub_dbs$ProtMapper
-
-### Comparison GBM WT 
-# tt_WT_AMP<-openxlsx::read.xlsx(".//output/20260512_RRS_1296_PCF_Phospho2/PTM_PRC_DEA/2026-08-11//TopTable_WT_AMP.xlsx")
-# tt_WT_AMP<-tt_WT_AMP[tt_WT_AMP$AMP_vs_WT_significant,]
-# WT_candidates<-tt_WT_AMP[order(tt_WT_AMP$AMP_vs_WT_logFC),]%>%head(.,10)%>%.$genes
-# AMP_candidates<-tt_WT_AMP[order(tt_WT_AMP$AMP_vs_WT_logFC),]%>%tail(.,10)%>%.$genes
 
 ##### Iterate through samples ######
 purrr::map(phospho_samples,function(sample){
@@ -214,7 +208,6 @@ purrr::map(phospho_samples,function(sample){
     gsub("_"," ",.)
   res$Description<-factor(res$Description,levels = res$Description[order(res$Count,decreasing = F)])
   
-  
   ####### Plot Active Pathways #####
   ## --- Hit count / hit rate per category ---
   ## Normalized by number of pathways *tested* in that category, since
@@ -298,8 +291,6 @@ purrr::map(phospho_samples,function(sample){
       color = expression(-log[10]~adj.~p),
       title = "Significant Reactome pathways by signaling category"
     )
-  
-  active_pathways_plot
   
   #####--------- D. Supporting Phosphosites ------------------#####
   ptmEWM$zscore<-scale(ptmEWM$log2intensity,center = T,scale = T)
@@ -401,26 +392,20 @@ purrr::map(phospho_samples,function(sample){
     )
   report
   ggsave(plot = report, 
-         save_here(object_name = paste0("Report_", sample, "_", ptm_sse_raw$EGFR, ".pdf")),width = 20,height = 12)
+         save_here(object_name = paste0("Report_", sample, "_", ptm_sse_raw$EGFR, ".pdf"),dataset_name = "Figures",analysis_name = ""),width = 20,height = 12)
   
   if(sample=="P02"){
-    openxlsx::write.xlsx("",save_here(object_name = "Supplemental_table4.xlsx"))
-    openxlsx::createWorkbook(save_here(object_name = paste0("Supplemental_table4.xlsx")))
-    wb<-openxlsx::loadWorkbook(save_here(object_name = paste0("Supplemental_table4.xlsx")))
+    xlsx_path<-save_here(object_name = "Supplemental_table4.xlsx",dataset_name = paste0('/Supplemental_table/'),analysis_name = "")
+    openxlsx::write.xlsx("",xlsx_path)
+    openxlsx::createWorkbook(xlsx_path)
+    wb<-openxlsx::loadWorkbook(xlsx_path)
     
     openxlsx::addWorksheet(wb = wb,sheetName = "Reactome_ORA")
     openxlsx::writeData(wb,sheet="Reactome_ORA",x=ora_df)
     
     openxlsx::addWorksheet(wb = wb,sheetName = "Representative_Sites")
     openxlsx::writeData(wb,sheet="Representative_Sites",x=topkin)
-    
-    openxlsx::saveWorkbook(wb,save_here(object_name = paste0("Supplemental_table4.xlsx")),overwrite = T)
-    
+    openxlsx::saveWorkbook(wb,xlsx_path,overwrite = T)
   }
-  
-  
   return(report)
 })
-
-#####--------- E. CNV Profiling ------------------#####
-

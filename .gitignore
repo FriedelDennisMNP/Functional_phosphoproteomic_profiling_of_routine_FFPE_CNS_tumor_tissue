@@ -6,7 +6,10 @@
 /omnipathr-log/
 Supplemental_table1.xlsx
 ### Ignore folders
-/data/
+/data/omics/
+/data/sample_sheets/
+/data/20260817_RR1296_PCF
+/data/20260813_RRS_1296_PCF_Phospho
 /output/
 /projects/
 

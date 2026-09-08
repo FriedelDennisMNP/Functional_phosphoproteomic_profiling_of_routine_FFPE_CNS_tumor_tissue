@@ -29,9 +29,9 @@ layers <- c(
 
 ######------- 1. Load Data -----------####
 proc_ms<-
-  readRDS("./output/20260813_RRS_1296_PCF_Phospho//PTM_PRC_DEA/2026-09-07//ptm_se_prc.rds")
+  readRDS("./output/20260813_RRS_1296_PCF_Phospho//PTM_PRC_DEA/2026-09-08///ptm_se_prc.rds")
 proc_wp<-
-  readRDS("./output/20260817_RR1296_PCF/WP_PRC_DEA/2026-09-07/ms_se_prc.rds")
+  readRDS("./output/20260817_RR1296_PCF/WP_PRC_DEA/2026-09-08//ms_se_prc.rds")
 
 clindat<-colData(proc_ms$unfilt)[, c("experiment",
                              "Rhaissa_sample_id",
@@ -177,10 +177,18 @@ ggsave(
 )
 
 ######------- 4. Plot Figure/SuppFigure 1C PTM/WP data Quality  -----------####
+
 proc_list_flt<-list("PTM" = proc_ms$filt, "WP" = proc_wp$filt)
 figure_1C<-purrr::map(names(proc_list_flt),function(raw_ms_name){
-  long_df_int<-proteoLab:::get_intensity_long(se_object = proc_list_flt[[raw_ms_name]],assay_name = "intensity_norm",
-                                              group = "group")
+  
+  if(raw_ms_name=="WP"){
+    long_df_int<-proteoLab:::get_intensity_long(se_object = proc_list_flt[[raw_ms_name]],assay_name = "intensity",
+                                                group = "group")
+  }else{
+    long_df_int<-proteoLab:::get_intensity_long(se_object = proc_list_flt[[raw_ms_name]],assay_name = "intensity_norm",
+                                                group = "group")
+  }
+    
   long_df_int$EGFR<-ifelse(long_df_int$group=="WT",'Non-amplified','EGFR-amplified')
   long_df_int$group<-NULL
   fig1_panelC <-
@@ -199,6 +207,7 @@ figure_1C<-purrr::map(names(proc_list_flt),function(raw_ms_name){
     )
   
 })
+
 ggsave(
   plot = figure_1C[[1]],
   filename = save_here(dataset_name = "Figures",
@@ -234,3 +243,4 @@ ggsave(
   width = 15,
   height = 12
 )
+

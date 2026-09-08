@@ -36,7 +36,7 @@ mq_list <- create_maxquant_se_list(
 )
 
 ### Annoate
-metadata<-openxlsx::read.xlsx("./Supplemental_table1.xlsx",sheet = 1)
+metadata<-openxlsx::read.xlsx("./Sample_annotation.xlsx",sheet = 1)
 rownames(metadata)<-metadata$sample_id
 
 ptm_se<-mq_list$ptm_se
@@ -101,7 +101,7 @@ dea_res <- wrapper_dea_gsea(
 
 ttresult <- dea_res$tt_combined
 sum(ttresult$significant)
-ttresult[ttresult$AMP_vs_WT_adj_P_Val < 0.05, ]
+#ttresult[ttresult$AMP_vs_WT_adj_P_Val < 0.05, ]
 
 dea_res$tt_combined <- NULL
 purrr::map2(dea_res, names(dea_res), function(x, y) {
