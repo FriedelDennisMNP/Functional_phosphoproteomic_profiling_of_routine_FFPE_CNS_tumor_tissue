@@ -195,7 +195,7 @@ ggsave(
   plot = hms[[1]],
   save_here(
     object_name = "Figure3c_Protmapper_Significant_Kinases_Activities.pdf",
-    analysis = paste0('/', Sys.Date()),
+    analysis = paste0('/'),
     dataset_name = paste0('/Figures/')
   ),
   width = 12,
