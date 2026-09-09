@@ -4,9 +4,15 @@
 .Ruserdata
 .positai
 /omnipathr-log/
+*.px
+checksum.*
+checksum_dda.txt
+checksum_dia.txt
+
 Supplemental_table1.xlsx
 ### Ignore folders
 /data/omics/
+/data/rawdata/
 /data/sample_sheets/
 /data/20260817_RR1296_PCF
 /data/20260813_RRS_1296_PCF_Phospho
