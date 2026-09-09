@@ -29,7 +29,7 @@ layers <- c(
 
 ######------- 1. Load Data -----------####
 proc_ms<-
-  readRDS("./output/20260813_RRS_1296_PCF_Phospho//PTM_PRC_DEA/2026-09-08///ptm_se_prc.rds")
+  readRDS("./output/20260813_RRS_1296_PCF_Phospho_Protnorm/PTM_PRC_DEA/2026-09-09/ptm_se_prc.rds")
 proc_wp<-
   readRDS("./output/20260817_RR1296_PCF/WP_PRC_DEA/2026-09-08//ms_se_prc.rds")
 

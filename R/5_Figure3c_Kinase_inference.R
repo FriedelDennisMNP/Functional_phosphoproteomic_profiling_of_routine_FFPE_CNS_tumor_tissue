@@ -29,10 +29,10 @@ analysis = paste0('PTM_Decoupler_Kinase_Infernce/', Sys.Date()) # - Name of the 
 
 #######----------- 1.Load Data from previous results for Kinase Inference --#####
 ptm_se_imp <- readRDS(
-  "./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_DEA/2026-09-08/ptm_se_imp.rds")
+  "./output/20260813_RRS_1296_PCF_Phospho_Protnorm/PTM_PRC_DEA/2026-09-09/ptm_se_adjprc.rds")
 
 ttresult <- openxlsx::read.xlsx(
-  "./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_DEA/2026-09-08/TopTable_WT_AMP.xlsx"
+  "./output/20260813_RRS_1296_PCF_Phospho_Protnorm/PTM_PRC_DEA/2026-09-09/TopTable_WT_AMP.xlsx"
 )
 rownames(ttresult) <- ttresult$genes
 
@@ -152,7 +152,7 @@ hms<-purrr::map(names(dc_kinacts),function(y){
   ### make large legend
   topanno<-ComplexHeatmap::HeatmapAnnotation(
     df = data.frame(Condition = plyr::mapvalues(colnames(score_matrix),ptm_se_imp$sample_id,ptm_se_imp$group)),
-    col = list(Condition = c("AMP" = "forestgreen", "WT" = "#377EB8")), 
+    col = list(Condition = c("Amp" = "forestgreen", "WT" = "#377EB8")), 
     annotation_legend_param = list(title_gp = grid::gpar(fontsize = 14, fontface = "bold"),
                                    labels_gp = grid::gpar(fontsize = 12),
                                    legend_height = grid::unit(20, "cm")))
@@ -225,3 +225,4 @@ openxlsx::addWorksheet(wb = wb,sheetName = "Single_sample_kinact")
 openxlsx::writeData(wb,sheet="Single_sample_kinact",x=dc_kin_act)
 
 openxlsx::saveWorkbook(wb,xlsx_path,overwrite = T)
+

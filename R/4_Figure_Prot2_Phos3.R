@@ -28,11 +28,11 @@ layers <- c(
 
 ######------- 1. Load Data -----------####
 ptm<-
-  readRDS("./output/20260813_RRS_1296_PCF_Phospho//PTM_PRC_DEA/2026-09-08///ptm_se_prc.rds")
+  readRDS("./output/20260813_RRS_1296_PCF_Phospho_Protnorm/PTM_PRC_DEA/2026-09-09/ptm_se_adjprc.rds")
 wp<-
   readRDS("./output/20260817_RR1296_PCF/WP_PRC_DEA/2026-09-08/ms_se_prc.rds")
 
-datasets<-list("PTM"=ptm$imp,
+datasets<-list("PTM"=ptm,
                "WP"=wp$imp)
 
 ######------- 2. Figure 2-3 PCA  -----------####
@@ -233,7 +233,7 @@ ggsave(
 )
 
 ######------- 5. Figure 3 B PTM Volcano  -----------####
-ptm_se_imp<-ptm$imp
+ptm_se_imp<-ptm
 ptm_se_imp$group<-toupper(ptm_se_imp$group)
 dea_res <- wrapper_dea_gsea(
   ms_se = ptm_se_imp,
