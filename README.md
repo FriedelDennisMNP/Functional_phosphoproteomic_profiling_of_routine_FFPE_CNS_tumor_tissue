@@ -42,14 +42,14 @@ The scripts in `R/` are intended to be executed in numerical order. Scripts 1 an
 
 - `1_WP_PRC_DEA_20260817_RR1296_PCF.R`: Imports the DIA-NN whole-proteome results, annotates the samples, performs quality control and preprocessing, and runs differential abundance analysis between EGFR-amplified and non-amplified tumors.
 - `2_PTM_PRC_DEA_20260813_RRS_1296_PCF_Phospho.R`: Imports the MaxQuant phosphoproteomic results, filters and annotates phosphosites, performs quality control and preprocessing, and runs differential phosphoproteomic analysis between EGFR-amplified and non-amplified tumors.
-- `3_Figure1_Phos_Prot.R`: Loads the processed whole-proteome and phosphoproteome results and creates the protein/phosphosite identification and data-quality panels for Figure 1 and Supplemental Figure 1.
-- `4_Figure_2Prot_3Phos.R`: Creates PCA plots, differential-abundance volcano plots, and pathway-enrichment visualizations for the whole-proteome and phosphoproteome results, including Figures 2 and 3.
-- `5_Figure3c_Kinase_inference_20260813_RRS_1296_PCF_Phospho.R`: Performs kinase-substrate enrichment and kinase-activity inference using OmniPath enzyme-substrate resources, then generates kinase-activity plots and Supplemental Table 3.
+- `3_Figure1.R`: Loads the processed whole-proteome and phosphoproteome results and creates the protein/phosphosite identification and data-quality panels for Figure 1 and Supplemental Figure 1.
+- `4_Figure_Prot2_Phos3.R`: Creates PCA plots, differential-abundance volcano plots, and pathway-enrichment visualizations for the whole-proteome and phosphoproteome results, including Figures 2 and 3.
+- `5_Figure3c_Kinase_inference.R`: Performs kinase-substrate enrichment and kinase-activity inference using OmniPath enzyme-substrate resources, then generates kinase-activity plots and Supplemental Table 3.
 - `6_SingleSampleReport_v2_MBR.R`: Generates a single-sample report for each phosphoproteomic sample, including sample metadata, quality-control metrics, kinase activity, and pathway-activity summaries.
 
 ## Questions
 
-The provided environment uses R version 4.5.2. The workflow uses the following R packages: `arrow`, `assertthat`, `cmapR`, `clusterProfiler`, `ComplexHeatmap`, `circlize`, `data.table`, `dplyr`, `enrichplot`, `EnhancedVolcano`, `fgsea`, `ggplot2`, `ggpubr`, `ggsci`, `here`, `imputeLCMD`, `janitor`, `magrittr`, `msigdbr`, `OmnipathR`, `openxlsx`, `patchwork`, `plyr`, `proteoLab`, `purrr`, `reshape2`, `rip`, `R.utils`, `stringr`, and `SummarizedExperiment`, together with the standard R packages `grid`, `methods`, `parallel`, and `stats`.
+The provided environment uses R version 4.5.2. The workflow uses the following R packages: `arrow`, `assertthat`, `circlize`, `clusterProfiler`, `ComplexHeatmap`, `cowplot`, `data.table`, `decoupler`, `dplyr`, `EnhancedVolcano`, `enrichplot`, `factoextra`, `fgsea`, `furrr`, `ggally`, `ggplot2`, `ggpubr`, `ggsci`, `here`, `imputeLCMD`, `janitor`, `limma`, `lubridate`, `magrittr`, `matrixStats`, `msigdbr`, `OmnipathR`, `openxlsx`, `patchwork`, `pathview`, `plyr`, `purrr`, `remotes`, `reshape2`, `rtsne`, `r.utils`, `S4Vectors`, `shiny`, `stringr`, `SummarizedExperiment`, `sva`, `tibble`, `tidyr`, `umap`, and `vsn`.
 
 For questions or issues, use the issue section in this repository. I will try to
 respond as soon as possible.
