@@ -28,7 +28,7 @@ layers <- c(
 
 ######------- 1. Load Data -----------####
 ptm<-
-  readRDS("./output/20260813_RRS_1296_PCF_Phospho_Protnorm/PTM_PRC_DEA/2026-09-09/ptm_se_adjprc.rds")
+  readRDS("./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_ADJ_DEA/2026-09-09/ptm_se_adjprc.rds")
 wp<-
   readRDS("./output/20260817_RR1296_PCF/WP_PRC_DEA/2026-09-08/ms_se_prc.rds")
 
@@ -146,7 +146,6 @@ tmp_toptable$significant <-
 y_axis_label <- bquote( ~ -Log[10] ~ italic(P))
 
 top_candidates<-rownames(tmp_toptable)[tmp_toptable$significant]
-length(top_candidates)
 
 ## Plot Enhanced Volcano
 enVo <-

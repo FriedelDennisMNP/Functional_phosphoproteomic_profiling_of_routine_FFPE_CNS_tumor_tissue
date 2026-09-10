@@ -29,10 +29,10 @@ analysis = paste0('PTM_Decoupler_Kinase_Infernce/', Sys.Date()) # - Name of the 
 
 #######----------- 1.Load Data from previous results for Kinase Inference --#####
 ptm_se_imp <- readRDS(
-  "./output/20260813_RRS_1296_PCF_Phospho_Protnorm/PTM_PRC_DEA/2026-09-09/ptm_se_adjprc.rds")
+  "./output/20260813_RRS_1296_PCF_Phospho//PTM_PRC_ADJ_DEA/2026-09-09/ptm_se_adjprc.rds")
 
 ttresult <- openxlsx::read.xlsx(
-  "./output/20260813_RRS_1296_PCF_Phospho_Protnorm/PTM_PRC_DEA/2026-09-09/TopTable_WT_AMP.xlsx"
+  "./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_ADJ_DEA/2026-09-09/TopTable_protadjusted_WT_AMP.xlsx"
 )
 rownames(ttresult) <- ttresult$genes
 
@@ -97,8 +97,15 @@ dc_barplots <- purrr::map2(dea_dc_kinacts, names(dea_dc_kinacts), function(x, y)
     facet_by_condition = FALSE
   ) + ggtitle(y)
 })
-openxlsx::write.xlsx(dc_barplots[[1]]@data,file = save_here(object_name = "Kinases_diff_EGFR_amp.xlsx"))
 
+ggsave(
+  dc_barplots[[1]],
+  file = save_here(object_name = "Kinases_protmapper_diff_EGFR_amp.pdf"),
+  width = 7,
+  height = 7
+)
+openxlsx::write.xlsx(dc_barplots[[1]]@data,
+                     file = save_here(object_name = "Kinases_diff_EGFR_amp.xlsx"))
 ggplot2::ggsave(
   filename = save_here(object_name = paste0("AMP_vs_WT_dc_kinase_viper_inference.pdf"),analysis = analysis),
   plot = dc_barplots,
