@@ -201,7 +201,7 @@ enVo
 ggsave(
   plot = enVo,
   save_here(dataset_name = "Figures",
-            object_name = "Figrue3B_WPVolcano.pdf"),
+            object_name = "Figrue2B.pdf"),
   width = 10,
   height = 10
 )
@@ -226,7 +226,7 @@ Figure3C
 ggsave(
   plot = Figure3C,
   save_here(dataset_name = "Figures",
-            object_name = "Figure3C_Hallmarks.pdf"),
+            object_name = "Figure3C.pdf"),
   width = 10,
   height = 10
 )
