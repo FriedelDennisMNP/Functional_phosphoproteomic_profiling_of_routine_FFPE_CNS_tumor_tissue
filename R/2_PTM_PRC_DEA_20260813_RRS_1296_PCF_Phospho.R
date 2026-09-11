@@ -20,21 +20,6 @@ source("./R/utils/import_module.R")
 source("./R/utils/preprocess_module.R")
 source("./R/utils/compare_module.R")
 
-### Load data
-mq_results<-
-  load_ms_results(ms_result_dir = "./data//20260813_RRS_1296_PCF_Phospho/MaxQuant2.4.2.0",
-                             file_names = c("summary.txt",
-                             "peptides.txt",
-                             "evidence.txt",
-                             "proteinGroups.txt",
-                             "Phospho_STY_Sites.txt"))
-
-mq_list <- create_maxquant_se_list(
-  mq_results = mq_results,
-  ptm_probability_flt = 0.75,
-  remove_low_quality = T
-)
-
 ### Annoate
 ptm_se_flt<-readRDS("./data/ptm_se_raw.rds")
 
