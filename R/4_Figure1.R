@@ -184,10 +184,10 @@ proc_list_flt<-list("PTM" = proc_ms_adj, "WP" = proc_wp$filt)
 figure_1C<-purrr::map(names(proc_list_flt),function(raw_ms_name){
   
   if(raw_ms_name=="WP"){
-    long_df_int<-proteoLab:::get_intensity_long(se_object = proc_list_flt[[raw_ms_name]],assay_name = "intensity",
+    long_df_int<-get_intensity_long(se_object = proc_list_flt[[raw_ms_name]],assay_name = "intensity",
                                                 group = "group")
   }else{
-    long_df_int<-proteoLab:::get_intensity_long(se_object = proc_list_flt[[raw_ms_name]],assay_name = "adjusted",
+    long_df_int<-get_intensity_long(se_object = proc_list_flt[[raw_ms_name]],assay_name = "adjusted",
                                                 group = "group")
   }
     
