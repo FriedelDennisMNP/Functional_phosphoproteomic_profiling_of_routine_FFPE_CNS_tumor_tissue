@@ -29,9 +29,9 @@ layers <- c(
 
 ######------- 1. Load Data -----------####
 proc_ms<-
-  readRDS("./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_DEA/2026-09-09/ptm_se_prc.rds")
+  readRDS("./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_DEA/2026-09-11/ptm_se_prc.rds")
 proc_wp<-
-  readRDS("./output/20260817_RR1296_PCF/WP_PRC_DEA/2026-09-08//ms_se_prc.rds")
+  readRDS("./output/20260817_RR1296_PCF/WP_PRC_DEA/2026-09-11//ms_se_prc.rds")
 
 clindat<-colData(proc_ms$unfilt)[, c("experiment",
                              "Rhaissa_sample_id",
@@ -178,7 +178,7 @@ ggsave(
 
 ######------- 4. Plot Figure/SuppFigure 1C PTM/WP data Quality  -----------####
 proc_ms_adj<-
-  readRDS("./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_ADJ_DEA//2026-09-09/ptm_se_adjprc.rds")
+  readRDS("./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_ADJ_DEA//2026-09-11/ptm_se_adjprc.rds")
 
 proc_list_flt<-list("PTM" = proc_ms_adj, "WP" = proc_wp$filt)
 figure_1C<-purrr::map(names(proc_list_flt),function(raw_ms_name){

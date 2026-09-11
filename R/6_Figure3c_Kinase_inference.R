@@ -29,10 +29,10 @@ analysis = paste0('PTM_Decoupler_Kinase_Infernce/', Sys.Date()) # - Name of the 
 
 #######----------- 1.Load Data from previous results for Kinase Inference --#####
 ptm_se_imp <- readRDS(
-  "./output/20260813_RRS_1296_PCF_Phospho//PTM_PRC_ADJ_DEA/2026-09-09/ptm_se_adjprc.rds")
+  "./output/20260813_RRS_1296_PCF_Phospho//PTM_PRC_ADJ_DEA/2026-09-11/ptm_se_adjprc.rds")
 
 ttresult <- openxlsx::read.xlsx(
-  "./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_ADJ_DEA/2026-09-09/TopTable_protadjusted_WT_AMP.xlsx"
+  "./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_ADJ_DEA/2026-09-11/TopTable_protadjusted_WT_AMP.xlsx"
 )
 rownames(ttresult) <- ttresult$genes
 
