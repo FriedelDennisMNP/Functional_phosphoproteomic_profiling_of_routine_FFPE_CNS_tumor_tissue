@@ -13,9 +13,8 @@ including five EGFR-amplified and five non-amplified tumors.
 Mass spectrometry generated robust proteomic and phosphoproteomic coverage across all cases. Global proteomic profiling 
 revealed group-associated protein abundance and pathway differences,including increased EGFR abundance in EGFR-amplified tumors,
 while showing substantial intertumoral overlap. Global phosphoproteomic profiles similarly showed partial group-level 
-separation with substantial intertumoral overlap. Differential phosphoproteomic analysis identified 483 
-phosphosites based on predefined exploratory statistical criteria, with multiple EGFR phosphosites, including Y1110, Y1197, and T693,
-among the strongest changes in EGFR-amplified tumors. 
+separation with substantial intertumoral overlap. Differential phosphoproteomic analysis identified 443 
+phosphosites based on predefined exploratory statistical criteria, with multiple EGFR phosphosites. 
 Kinase-substrate enrichment further revealed coordinated EGFR- and SRC-associated signaling alongside considerable 
 heterogeneity within both molecular groups. These findings demonstrate that routine FFPE tissue retains biologically 
 coherent functional information at both the protein abundance and phosphosignaling levels that can be interpreted alongside 
