@@ -198,7 +198,7 @@ figure_1C<-purrr::map(names(proc_list_flt),function(raw_ms_name){
     ggplot2::geom_violin(trim = F,alpha=.5) +
     ggplot2::geom_jitter(aes(color=EGFR),width=0.1,size=1.5,alpha=0.1) +
     ggplot2::geom_boxplot(width=0.1,outlier.shape = NA,fill="white") +
-    labs(y = expression(Log[2] ~ "normalized Intensities (Median Center)"), x = "") +
+    labs(y = expression(Log[2] ~ "normalized Intensities (Median Center+ proteom adjusted)"), x = "") +
     ggplot2::scale_fill_manual(name="EGFR status",values=layers)+
     theme_minimal(base_size = 14) +
     theme(
@@ -213,15 +213,15 @@ figure_1C<-purrr::map(names(proc_list_flt),function(raw_ms_name){
 ggsave(
   plot = figure_1C[[1]],
   filename = save_here(dataset_name = "Figures",
-                       object_name = "Figure1C.pdf"),
-  width = 10,
+                       object_name = "Figure1D.pdf"),
+  width = 15,
   height = 7
 )
 ggsave(
   plot = figure_1C[[2]],
   filename = save_here(dataset_name = "Figures",
                        object_name = "Supplemental_Figure1C.pdf"),
-  width = 10,
+  width = 15,
   height = 7
 )
 

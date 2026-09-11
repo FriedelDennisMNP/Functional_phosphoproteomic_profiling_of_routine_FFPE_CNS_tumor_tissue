@@ -198,6 +198,7 @@ hms<-purrr::map(names(dc_kinacts),function(y){
   complexheatmap_to_ggplot(hm)
 })
 
+hms[[1]]
 ggsave(
   plot = hms[[1]],
   save_here(
