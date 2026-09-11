@@ -28,11 +28,11 @@ layers <- c(
 
 ######------- 1. Load Data -----------####
 ptm<-
-  readRDS("./output/20260813_RRS_1296_PCF_Phospho//PTM_PRC_DEA/2026-09-08///ptm_se_prc.rds")
+  readRDS("./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_ADJ_DEA/2026-09-09/ptm_se_adjprc.rds")
 wp<-
   readRDS("./output/20260817_RR1296_PCF/WP_PRC_DEA/2026-09-08/ms_se_prc.rds")
 
-datasets<-list("PTM"=ptm$imp,
+datasets<-list("PTM"=ptm,
                "WP"=wp$imp)
 
 ######------- 2. Figure 2-3 PCA  -----------####
@@ -146,7 +146,6 @@ tmp_toptable$significant <-
 y_axis_label <- bquote( ~ -Log[10] ~ italic(P))
 
 top_candidates<-rownames(tmp_toptable)[tmp_toptable$significant]
-length(top_candidates)
 
 ## Plot Enhanced Volcano
 enVo <-
@@ -202,7 +201,7 @@ enVo
 ggsave(
   plot = enVo,
   save_here(dataset_name = "Figures",
-            object_name = "Figrue3B_WPVolcano.pdf"),
+            object_name = "Figrue2B.pdf"),
   width = 10,
   height = 10
 )
@@ -227,13 +226,13 @@ Figure3C
 ggsave(
   plot = Figure3C,
   save_here(dataset_name = "Figures",
-            object_name = "Figure3C_Hallmarks.pdf"),
+            object_name = "Figure3C.pdf"),
   width = 10,
   height = 10
 )
 
 ######------- 5. Figure 3 B PTM Volcano  -----------####
-ptm_se_imp<-ptm$imp
+ptm_se_imp<-ptm
 ptm_se_imp$group<-toupper(ptm_se_imp$group)
 dea_res <- wrapper_dea_gsea(
   ms_se = ptm_se_imp,

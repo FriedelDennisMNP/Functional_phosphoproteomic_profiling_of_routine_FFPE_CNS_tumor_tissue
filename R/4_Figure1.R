@@ -29,7 +29,7 @@ layers <- c(
 
 ######------- 1. Load Data -----------####
 proc_ms<-
-  readRDS("./output/20260813_RRS_1296_PCF_Phospho//PTM_PRC_DEA/2026-09-08///ptm_se_prc.rds")
+  readRDS("./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_DEA/2026-09-09/ptm_se_prc.rds")
 proc_wp<-
   readRDS("./output/20260817_RR1296_PCF/WP_PRC_DEA/2026-09-08//ms_se_prc.rds")
 
@@ -177,15 +177,17 @@ ggsave(
 )
 
 ######------- 4. Plot Figure/SuppFigure 1C PTM/WP data Quality  -----------####
+proc_ms_adj<-
+  readRDS("./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_ADJ_DEA//2026-09-09/ptm_se_adjprc.rds")
 
-proc_list_flt<-list("PTM" = proc_ms$filt, "WP" = proc_wp$filt)
+proc_list_flt<-list("PTM" = proc_ms_adj, "WP" = proc_wp$filt)
 figure_1C<-purrr::map(names(proc_list_flt),function(raw_ms_name){
   
   if(raw_ms_name=="WP"){
-    long_df_int<-proteoLab:::get_intensity_long(se_object = proc_list_flt[[raw_ms_name]],assay_name = "intensity",
+    long_df_int<-get_intensity_long(se_object = proc_list_flt[[raw_ms_name]],assay_name = "intensity",
                                                 group = "group")
   }else{
-    long_df_int<-proteoLab:::get_intensity_long(se_object = proc_list_flt[[raw_ms_name]],assay_name = "intensity_norm",
+    long_df_int<-get_intensity_long(se_object = proc_list_flt[[raw_ms_name]],assay_name = "adjusted",
                                                 group = "group")
   }
     
@@ -196,7 +198,7 @@ figure_1C<-purrr::map(names(proc_list_flt),function(raw_ms_name){
     ggplot2::geom_violin(trim = F,alpha=.5) +
     ggplot2::geom_jitter(aes(color=EGFR),width=0.1,size=1.5,alpha=0.1) +
     ggplot2::geom_boxplot(width=0.1,outlier.shape = NA,fill="white") +
-    labs(y = expression(Log[2] ~ "normalized Intensities (Median Center)"), x = "") +
+    labs(y = expression(Log[2] ~ "normalized Intensities (Median Center+ proteom adjusted)"), x = "") +
     ggplot2::scale_fill_manual(name="EGFR status",values=layers)+
     theme_minimal(base_size = 14) +
     theme(
@@ -211,15 +213,15 @@ figure_1C<-purrr::map(names(proc_list_flt),function(raw_ms_name){
 ggsave(
   plot = figure_1C[[1]],
   filename = save_here(dataset_name = "Figures",
-                       object_name = "Figure1C.pdf"),
-  width = 10,
+                       object_name = "Figure1D.pdf"),
+  width = 15,
   height = 7
 )
 ggsave(
   plot = figure_1C[[2]],
   filename = save_here(dataset_name = "Figures",
                        object_name = "Supplemental_Figure1C.pdf"),
-  width = 10,
+  width = 15,
   height = 7
 )
 

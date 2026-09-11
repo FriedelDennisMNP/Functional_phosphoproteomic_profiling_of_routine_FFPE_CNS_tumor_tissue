@@ -29,10 +29,10 @@ analysis = paste0('PTM_Decoupler_Kinase_Infernce/', Sys.Date()) # - Name of the 
 
 #######----------- 1.Load Data from previous results for Kinase Inference --#####
 ptm_se_imp <- readRDS(
-  "./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_DEA/2026-09-08/ptm_se_imp.rds")
+  "./output/20260813_RRS_1296_PCF_Phospho//PTM_PRC_ADJ_DEA/2026-09-09/ptm_se_adjprc.rds")
 
 ttresult <- openxlsx::read.xlsx(
-  "./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_DEA/2026-09-08/TopTable_WT_AMP.xlsx"
+  "./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_ADJ_DEA/2026-09-09/TopTable_protadjusted_WT_AMP.xlsx"
 )
 rownames(ttresult) <- ttresult$genes
 
@@ -97,8 +97,15 @@ dc_barplots <- purrr::map2(dea_dc_kinacts, names(dea_dc_kinacts), function(x, y)
     facet_by_condition = FALSE
   ) + ggtitle(y)
 })
-openxlsx::write.xlsx(dc_barplots[[1]]@data,file = save_here(object_name = "Kinases_diff_EGFR_amp.xlsx"))
 
+ggsave(
+  dc_barplots[[1]],
+  file = save_here(object_name = "Kinases_protmapper_diff_EGFR_amp.pdf"),
+  width = 7,
+  height = 7
+)
+openxlsx::write.xlsx(dc_barplots[[1]]@data,
+                     file = save_here(object_name = "Kinases_diff_EGFR_amp.xlsx"))
 ggplot2::ggsave(
   filename = save_here(object_name = paste0("AMP_vs_WT_dc_kinase_viper_inference.pdf"),analysis = analysis),
   plot = dc_barplots,
@@ -152,7 +159,7 @@ hms<-purrr::map(names(dc_kinacts),function(y){
   ### make large legend
   topanno<-ComplexHeatmap::HeatmapAnnotation(
     df = data.frame(Condition = plyr::mapvalues(colnames(score_matrix),ptm_se_imp$sample_id,ptm_se_imp$group)),
-    col = list(Condition = c("AMP" = "forestgreen", "WT" = "#377EB8")), 
+    col = list(Condition = c("Amp" = "forestgreen", "WT" = "#377EB8")), 
     annotation_legend_param = list(title_gp = grid::gpar(fontsize = 14, fontface = "bold"),
                                    labels_gp = grid::gpar(fontsize = 12),
                                    legend_height = grid::unit(20, "cm")))
@@ -191,11 +198,12 @@ hms<-purrr::map(names(dc_kinacts),function(y){
   complexheatmap_to_ggplot(hm)
 })
 
+hms[[1]]
 ggsave(
   plot = hms[[1]],
   save_here(
     object_name = "Figure3c_Protmapper_Significant_Kinases_Activities.pdf",
-    analysis = paste0('/', Sys.Date()),
+    analysis = paste0('/'),
     dataset_name = paste0('/Figures/')
   ),
   width = 12,
@@ -225,3 +233,4 @@ openxlsx::addWorksheet(wb = wb,sheetName = "Single_sample_kinact")
 openxlsx::writeData(wb,sheet="Single_sample_kinact",x=dc_kin_act)
 
 openxlsx::saveWorkbook(wb,xlsx_path,overwrite = T)
+
