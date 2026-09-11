@@ -13,13 +13,12 @@ including five EGFR-amplified and five non-amplified tumors.
 Mass spectrometry generated robust proteomic and phosphoproteomic coverage across all cases. Global proteomic profiling 
 revealed group-associated protein abundance and pathway differences,including increased EGFR abundance in EGFR-amplified tumors,
 while showing substantial intertumoral overlap. Global phosphoproteomic profiles similarly showed partial group-level 
-separation with substantial intertumoral overlap. Differential phosphoproteomic analysis identified 443 
-phosphosites based on predefined exploratory statistical criteria, with multiple EGFR phosphosites. 
-Kinase-substrate enrichment further revealed coordinated EGFR- and SRC-associated signaling alongside considerable 
-heterogeneity within both molecular groups. These findings demonstrate that routine FFPE tissue retains biologically 
+separation with substantial intertumoral overlap. Differential phosphoproteomic analysis identified 443 phosphosites based on predefined exploratory statistical criteria, with only one phosphosite remaining significant after correction for multiple testing. Multiple EGFR-associated phosphosites showed increased abundance in EGFR-amplified tumors, while kinase-substrate enrichment further revealed coordinated EGFR- and SRC-associated signaling alongside considerable heterogeneity within both molecular groups.
+These findings demonstrate that routine FFPE tissue retains biologically 
 coherent functional information at both the protein abundance and phosphosignaling levels that can be interpreted alongside 
-genomic and epigenomic data.
-Phosphoproteomics therefore represents an orthogonal functional layer that may complement established molecular characterization of CNS tumors.
+genomic and epigenomic data. Phosphoproteomics therefore represents an orthogonal functional layer that may complement established molecular characterization of CNS tumors.
+
+
 
 ## How to reproduce the results from the paper using the information from this repository 
 
