@@ -20,7 +20,7 @@ source("./R/utils/import_module.R")
 source("./R/utils/preprocess_module.R")
 source("./R/utils/compare_module.R")
 
-### Annoate
+### Load data
 ptm_se_flt<-readRDS("./data/ptm_se_raw.rds")
 
 ### Preprocess
