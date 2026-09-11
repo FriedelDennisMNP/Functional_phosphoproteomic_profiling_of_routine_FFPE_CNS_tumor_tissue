@@ -48,7 +48,7 @@ colnames(ptm_se)<-metadata$sample_id
 SummarizedExperiment::colData(ptm_se)<-S4Vectors::DataFrame(metadata[match(ptm_se$sample_id,metadata$original_id),])
 
 ptm_se_flt<-ptm_se[,ptm_se$group%in%c("Amp","WT")]
-saveRDS(ptm_se_flt,save_here(object_name = "ptm_se_raw.rds"))
+saveRDS(ptm_se_flt,"./data/ptm_se_raw.rds")
 
 ### Preprocess
 ptm_se_prc <- pre_processing_wrapper(

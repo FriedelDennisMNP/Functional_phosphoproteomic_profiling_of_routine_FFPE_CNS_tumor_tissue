@@ -57,6 +57,7 @@ metadata$original_id<-gsub("_p_raw","",metadata$original_id)
 rownames(metadata)<-metadata$sample_id
 
 ### Use Intensities of Proteins mapped to Genes 
+
 ms_se<-msdata$ggu_se
 ms_se$sample_id<-plyr::mapvalues(colnames(ms_se),metadata$original_id,metadata$sample_id)
 new_cd<-plyr::join(as.data.frame(colData(ms_se)),metadata,by = "sample_id")%>%DataFrame()
@@ -66,6 +67,7 @@ colData(ms_se)<-new_cd
 
 ### Drop samples which are not amp or WT
 ms_se_flt<-ms_se[,ms_se$group%in%c("WT","Amp")]
+saveRDS(ms_se_flt,file = "./data/wholeproteome_intensities.rds")
 
 ### Run Preproc and DEA
 ### Preprocess
