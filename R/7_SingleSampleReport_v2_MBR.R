@@ -24,7 +24,7 @@ analysis = paste0('/',Sys.Date()) # - Name of the analysis e.g Marker Identifica
 dataset = paste0('/Figure/')
 
 ##### Load cohort #####
-ptm_se_raw<-readRDS(".//output/20260813_RRS_1296_PCF_Phospho//PTM_PRC_DEA/2026-09-08/ptm_se_raw.rds")
+ptm_se_raw<-readRDS("./data/ptm_se_raw.rds")
 phospho_samples<-colnames(ptm_se_raw)
 ptm_se_raw$EGFR<-gsub("Amp","EGFR amplification",ptm_se_raw$EGFR)%>%gsub("WT","EGFR unamplified",.)
 

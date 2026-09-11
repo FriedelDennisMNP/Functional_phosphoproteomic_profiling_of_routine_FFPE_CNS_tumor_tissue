@@ -20,9 +20,9 @@ source("./R/utils/preprocess_module.R")
 source("./R/utils/compare_module.R")
 
 #####------- 0 Load RDS data for addtional Normalization by Protein -------#####
-ptm_se <- readRDS("./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_DEA/2026-09-08/ptm_se_prc.rds")$filt
+ptm_se <- readRDS("./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_DEA/2026-09-11//ptm_se_prc.rds")$filt
 
-prot_se <- readRDS("./output/20260817_RR1296_PCF/WP_PRC_DEA/2026-09-08/ms_se_prc.rds")$filt
+prot_se <- readRDS("./output/20260817_RR1296_PCF/WP_PRC_DEA/2026-09-11/ms_se_prc.rds")$filt
 prot_se@elementMetadata[["id"]] <- gsub(";.*", "", prot_se@elementMetadata[["id"]])
 
 #####------- Step 1.: acquire long formated dataframes with ID annotation ####
@@ -137,7 +137,7 @@ dea_res <- wrapper_dea_gsea(
   gene_set_catalouge = NULL
 )
 ttresult <- dea_res$tt_combined
-ttresult[ttresult$significant,]
+dim(ttresult[ttresult$significant,])
 
 dea_res$tt_combined <- NULL
 purrr::map2(dea_res, names(dea_res), function(x, y) {
@@ -157,13 +157,15 @@ openxlsx::write.xlsx(ttresult, save_here(object_name = "TopTable_protadjusted_WT
 saveRDS(ptm_se_adj_imp, save_here(object_name = "ptm_se_imp.rds"))
 
 #####------- Step 6.: Compare with non-normalized  -------#####
-ttunadjust<-openxlsx::read.xlsx("./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_DEA/2026-09-09/TopTable_WT_AMP.xlsx")
+ttunadjust<-openxlsx::read.xlsx("./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_DEA/2026-09-11/TopTable_WT_AMP.xlsx")
 ttun<-ttunadjust$genes[ttunadjust$significant]
 ttadj<-ttresult$genes[ttresult$significant]
 intersect(ttadj,ttun)
 
 vd<-ggVennDiagram::ggVennDiagram(x = list("Site Adjusted" = ttadj, "Unadjusted" =
                                         ttun)) + coord_flip()
+vd
+
 ggsave(plot = vd,
        filename = 
        save_here(object_name = "Venndiagram_Sites.pdf"),

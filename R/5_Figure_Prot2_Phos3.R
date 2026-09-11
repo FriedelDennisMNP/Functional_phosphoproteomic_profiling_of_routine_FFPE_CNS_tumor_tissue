@@ -28,9 +28,9 @@ layers <- c(
 
 ######------- 1. Load Data -----------####
 ptm<-
-  readRDS("./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_ADJ_DEA/2026-09-09/ptm_se_adjprc.rds")
+  readRDS("./output/20260813_RRS_1296_PCF_Phospho/PTM_PRC_ADJ_DEA/2026-09-11//ptm_se_adjprc.rds")
 wp<-
-  readRDS("./output/20260817_RR1296_PCF/WP_PRC_DEA/2026-09-08/ms_se_prc.rds")
+  readRDS("./output/20260817_RR1296_PCF/WP_PRC_DEA/2026-09-11//ms_se_prc.rds")
 
 datasets<-list("PTM"=ptm,
                "WP"=wp$imp)

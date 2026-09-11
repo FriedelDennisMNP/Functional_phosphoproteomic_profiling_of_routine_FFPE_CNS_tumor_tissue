@@ -36,19 +36,7 @@ mq_list <- create_maxquant_se_list(
 )
 
 ### Annoate
-metadata<-openxlsx::read.xlsx("./data/Sample_annotation.xlsx",sheet = 1)
-rownames(metadata)<-metadata$sample_id
-
-ptm_se<-mq_list$ptm_se
-ptm_se<-ptm_se[!duplicated(ptm_se@elementMetadata$Name),]
-rownames(ptm_se)<-ptm_se@elementMetadata$Name
-
-ptm_se<-ptm_se[,ptm_se$sample_id%in%metadata$original_id]
-colnames(ptm_se)<-metadata$sample_id
-SummarizedExperiment::colData(ptm_se)<-S4Vectors::DataFrame(metadata[match(ptm_se$sample_id,metadata$original_id),])
-
-ptm_se_flt<-ptm_se[,ptm_se$group%in%c("Amp","WT")]
-saveRDS(ptm_se_flt,"./data/ptm_se_raw.rds")
+ptm_se_flt<-readRDS("./data/ptm_se_raw.rds")
 
 ### Preprocess
 ptm_se_prc <- pre_processing_wrapper(
@@ -119,4 +107,4 @@ purrr::map2(dea_res, names(dea_res), function(x, y) {
 })
 openxlsx::write.xlsx(ttresult, save_here(object_name = "TopTable_WT_AMP.xlsx"))
 saveRDS(ptm_se_imp, save_here(object_name = "ptm_se_imp.rds"))
-ttresult
+

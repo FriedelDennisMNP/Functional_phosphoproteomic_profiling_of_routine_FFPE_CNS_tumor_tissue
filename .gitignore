@@ -10,7 +10,9 @@ checksum_dda.txt
 checksum_dia.txt
 
 Supplemental_table1.xlsx
+
 ### Ignore folders
+/data/Sample_annotation.xlsx
 /data/omics/
 /data/rawdata/
 /data/sample_sheets/
